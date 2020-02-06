@@ -24,24 +24,28 @@ const { dinosaurs, humans, movies } = require('./datasets/dinosaurs');
 // DATASET: kitties from ./datasets/kitties
 const kittyPrompts = {
   orangeKittyNames() {
-
     // Return an array of just the names of kitties who are orange e.g.
     // ['Tiger', 'Snickers']
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const orangeKitties = kitties.filter(kitty => {
+      return kitty.color === 'orange';
+    });
+    const result = orangeKitties.reduce((acc, kitty) => {
+      acc.push(kitty.name);
+      return acc;
+    },[]);
     return result;
 
-    // Annotation:
-    // Write your annotation here as a comment
+    // Annotation: Becasue the kitties array is holding objects, I wanted to first filter it out to determine which of the kitties objects inside are colored orange by iterating through that using the filter array prototype, becuase filter will return ALL the elements matching the conditional provided, returning that result in an array of those elements. However, since the prompt is asking to return an array of ONLY THE NAMES, I then used the reduce iterator method, and set my accumulator to an empty array to pull the names of the kitties that were filtered for in the prior step and place those names in an array that would be returned via the accumulator.
   },
 
   sortByAge() {
     // Sort the kitties by their age
-
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = kitties.sort((kitty1, kitty2) => {
+      return kitty2.age - kitty1.age;
+    });
     return result;
 
-    // Annotation:
-    // Write your annotation here as a comment
+    // Annotation: I used the sort method because I know that it will compare each element in the array against its previous element via subtraction. The return value is the original array mutated to display the sort order specified.
   },
 
   growUp() {
@@ -57,10 +61,14 @@ const kittyPrompts = {
     //   color: 'orange'
     // },
     // ...etc]
-
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const increasedKittyAge = kitties.forEach(kitty => {
+      kitty.age +=2;
+    });
+    const result = kitties;
     return result;
   }
+
+  // Annotation: I know that with the forEach iterator method allows each element within an array to manipulated, and though it doesn't return anything, it can mutate the original array. Thus, I used it to iterate over each element in the kitty array, adding to each of their age properties. After the iteration is complete on all elements, I assign the result to the array as it has now been mutated to reflect all the kitties' updated ages.
 };
 
 
@@ -90,11 +98,24 @@ const clubPrompts = {
     //   ...etc
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = clubs.reduce((acc, club) => {
+      club.members.forEach(member => {
+        if (!acc[member]) {
+          acc[member] = [];
+        }
+      });
+      let accKeys = Object.keys(acc);
+      accKeys.forEach(key => {
+        if (club.members.includes(key)) {
+          acc[key].push(club.club);
+        }
+      });
+      return acc;
+    }, {});
+
     return result;
 
-    // Annotation:
-    // Write your annotation here as a comment
+    // Annotation: I know that reduce is able to iterate over an array and return 'one thing' as defined by the user via the returning the accumulator. In this case, I set my accumulator to an empty object. Inside the reduce the function, I then used forEach to iterate over the members array of each object within the original array (clubs), and for each member's name, created a key with that name in my accumulator, if that key didn't already exist and set it to an empty array. Once, I had all my keys established in my accumulator, I then used forEach to iterate over the keys in my accumulator via Object.keys, and then checked to see if current value (club) in my reduce iterator included club members with a value of the current key via the forEach, and if not, pushed them into the array assigned to that key.
   }
 };
 
